@@ -1,4 +1,4 @@
-const pengeluaran = [
+let pengeluaran = [
   {
     id: 1,
     jumlah: 25000,
@@ -20,7 +20,12 @@ function render() {
   let html = "";
 
   pengeluaran.forEach(function(item) {
-    html += `<p>${item.kategori} - Rp${item.jumlah} (${item.tanggal})</p>`;
+    html += `
+      <p>
+        ${item.kategori} - Rp${item.jumlah} (${item.tanggal})
+        <button onclick="hapusPengeluaran(${item.id})">Hapus</button>
+      </p>
+    `;
   });
 
   wadah.innerHTML = html;
@@ -55,6 +60,15 @@ function tambahPengeluaran() {
   };
 
   pengeluaran.push(baru);
+
+  render();
+  hitungTotal();
+}
+
+function hapusPengeluaran(id) {
+  pengeluaran = pengeluaran.filter(function(item) {
+    return item.id !== id;
+  });
 
   render();
   hitungTotal();
