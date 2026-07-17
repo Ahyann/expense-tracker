@@ -47,6 +47,17 @@ function tambahPengeluaran() {
   const tanggal = document.getElementById("input-tanggal").value;
   const catatan = document.getElementById("input-catatan").value;
 
+  // Validasi: semua field harus diisi, jumlah harus lebih dari 0
+  if (!jumlah || !kategori || !tanggal || !catatan) {
+    alert("Semua field harus diisi!");
+    return;
+  }
+
+  if (jumlah <= 0) {
+    alert("Jumlah harus lebih dari 0!");
+    return;
+  }
+
   const baru = {
     id: Date.now(),
     jumlah: jumlah,
