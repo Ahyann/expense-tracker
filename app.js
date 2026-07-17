@@ -31,8 +31,6 @@ function render() {
   wadah.innerHTML = html;
 }
 
-render();
-
 function hitungTotal() {
   let total = 0;
 
@@ -42,8 +40,6 @@ function hitungTotal() {
 
   document.getElementById("total").innerHTML = "Total: Rp" + total;
 }
-
-hitungTotal();
 
 function tambahPengeluaran() {
   const jumlah = Number(document.getElementById("input-jumlah").value);
@@ -60,7 +56,7 @@ function tambahPengeluaran() {
   };
 
   pengeluaran.push(baru);
-
+  simpanData();
   render();
   hitungTotal();
 }
@@ -69,12 +65,25 @@ function hapusPengeluaran(id) {
   pengeluaran = pengeluaran.filter(function(item) {
     return item.id !== id;
   });
-
+  simpanData();
   render();
   hitungTotal();
 }
 
-document.getElementById("btn-tambah").addEventListener("click", tambahPengeluaran);
+function simpanData() {
+  localStorage.setItem("pengeluaran", JSON.stringify(pengeluaran));
+}
 
+function muatData() {
+  const data = localStorage.getItem("pengeluaran");
+  if (data) {
+    pengeluaran = JSON.parse(data);
+  }
+}
+
+document.getElementById("btn-tambah").addEventListener("click", tambahPengeluaran);
+muatData();
+render();
+hitungTotal();
 
 console.log(pengeluaran);
