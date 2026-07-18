@@ -4,16 +4,44 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Expense Tracker</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
-  <h1>Expense Tracker</h1>
-  <div id="daftar-pengeluaran"></div>
-    <input type="number" id="input-jumlah" placeholder="Jumlah">
-    <input type="text" id="input-kategori" placeholder="Kategori">
-    <input type="date" id="input-tanggal">
-    <input type="text" id="input-catatan" placeholder="Catatan">
-    <button id="btn-tambah">Tambah</button>
-  <h2 id="total"></h2>
+<body class="bg-gray-950 text-white min-h-screen">
+
+  <!-- Container utama, max lebar HP -->
+  <div class="max-w-md mx-auto px-4 pb-10">
+
+    <!-- Header -->
+    <div class="py-6">
+      <h1 class="text-2xl font-bold text-center">Expense Tracker</h1>
+    </div>
+
+    <!-- Card Total -->
+    <div class="bg-gray-800 rounded-2xl p-5 mb-6">
+      <h2 id="total" class="text-3xl font-bold text-center"></h2>
+    </div>
+
+    <!-- Form Tambah -->
+    <div class="bg-gray-800 rounded-2xl p-5 mb-6 flex flex-col gap-3">
+      <input type="number" id="input-jumlah" placeholder="Jumlah (Rp)"
+        class="bg-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-400 outline-none">
+      <input type="text" id="input-kategori" placeholder="Kategori"
+        class="bg-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-400 outline-none">
+      <input type="date" id="input-tanggal"
+        class="bg-gray-700 rounded-xl px-4 py-3 text-white outline-none">
+      <input type="text" id="input-catatan" placeholder="Catatan"
+        class="bg-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-400 outline-none">
+      <button id="btn-tambah"
+        class="bg-yellow-400 text-gray-900 font-bold rounded-xl py-3 hover:bg-yellow-300 transition">
+        + Tambah
+      </button>
+    </div>
+
+    <!-- Daftar Transaksi -->
+    <div id="daftar-pengeluaran" class="flex flex-col gap-3"></div>
+
+  </div>
+
   <script src="app.js"></script>
 </body>
 </html>
