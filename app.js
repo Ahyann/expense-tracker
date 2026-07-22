@@ -20,13 +20,22 @@ function render() {
   let html = "";
 
   pengeluaran.forEach(function(item) {
-    html += `
-      <p>
-        ${item.kategori} - Rp${item.jumlah} (${item.tanggal})
-        <button onclick="hapusPengeluaran(${item.id})">Hapus</button>
-      </p>
-    `;
-  });
+  html += `
+    <div class="bg-gray-800 rounded-2xl p-4 flex justify-between items-center">
+      <div>
+        <p class="font-semibold text-white">${item.kategori}</p>
+        <p class="text-sm text-gray-400">${item.tanggal} • ${item.catatan}</p>
+      </div>
+      <div class="flex flex-col items-end gap-2">
+        <p class="text-red-400 font-bold">-Rp${item.jumlah.toLocaleString('id-ID')}</p>
+        <button onclick="hapusPengeluaran(${item.id})"
+          class="text-xs text-gray-500 hover:text-red-400 transition">
+          Hapus
+        </button>
+      </div>
+    </div>
+  `;
+});
 
   wadah.innerHTML = html;
 }
