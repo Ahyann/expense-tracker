@@ -1,26 +1,27 @@
 # Expense Tracker
 
-Personal expense tracker dibangun pakai vanilla JavaScript, HTML, dan Tailwind CSS — direncanakan jadi PWA yang bisa di-install ke HP.
+Personal expense tracker built with vanilla JavaScript, HTML, and Tailwind CSS — planned as a PWA installable on mobile.
 
-## Tentang Project
-App ini dibuat sebagai mini project portofolio — belajar membangun web app dari fondasi (state management manual, DOM manipulation, localStorage) sebelum pindah ke framework.
+## About
+Built as a portfolio mini project — learning to build a web app from scratch (manual state management, DOM manipulation, localStorage) before moving to frameworks.
 
 ## Tech Stack
-- HTML, CSS, vanilla JavaScript
-- Tailwind CSS (styling, Tahap 3)
-- PWA (manifest + service worker, Tahap 4)
+- HTML, vanilla JavaScript
+- Tailwind CSS (styling)
+- PWA — manifest + service worker (coming soon)
 
-## Progres
-- [x] Struktur data (array of objects)
-- [x] Render daftar transaksi ke halaman
-- [x] Hitung total pengeluaran
-- [x] Tambah transaksi baru lewat form
-- [ ] Hapus transaksi
-- [ ] Validasi input
-- [ ] Styling (Tailwind)
+## Progress
+- [x] Data structure (array of objects)
+- [x] Render transactions to page
+- [x] Calculate total
+- [x] Add transaction via form
+- [x] Delete transaction
+- [x] Input validation
+- [x] Styling (Tailwind) — dark mode, card layout
+- [x] localStorage — data persists after refresh
 - [ ] PWA (manifest + service worker)
 - [ ] Deploy
 
-## Cara jalanin
-1. Clone repo ini
-2. Buka `index.html` pakai Live Server (atau browser biasa)
+## How to run
+1. Clone this repo
+2. Open `index.html` with Live Server
