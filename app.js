@@ -19,6 +19,17 @@ function render() {
   const wadah = document.getElementById("daftar-pengeluaran");
   let html = "";
 
+  if (pengeluaran.length === 0) {
+    html = `
+      <div class="bg-gray-800 rounded-2xl p-6 text-center text-gray-400">
+        <p class="text-4xl mb-2">-</p>
+        <p>Belum ada transaksi</p>
+      </div>
+    `;
+    wadah.innerHTML = html;
+    return;
+  }
+
   pengeluaran.forEach(function(item) {
   html += `
     <div class="bg-gray-800 rounded-2xl p-4 flex justify-between items-center">
@@ -47,7 +58,7 @@ function hitungTotal() {
     total += item.jumlah;
   });
 
-  document.getElementById("total").innerHTML = "Total: Rp" + total;
+  document.getElementById("total").innerHTML = "Total: Rp" + total.toLocaleString('id-ID');
 }
 
 function tambahPengeluaran() {
