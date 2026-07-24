@@ -11,6 +11,8 @@ Built as a portfolio mini project — learning to build a web app from scratch (
 - Add and delete expense transactions
 - Auto-calculate total expenses
 - Data persists after refresh (localStorage)
+- Export data as JSON backup
+- Import data from backup file
 - Works offline (PWA + service worker)
 - Installable to iPhone/Android home screen
 
@@ -29,6 +31,7 @@ Built as a portfolio mini project — learning to build a web app from scratch (
 - [x] Input validation
 - [x] Styling (Tailwind) — dark mode, card layout
 - [x] localStorage — data persists after refresh
+- [x] Export & import data (JSON backup)
 - [x] PWA — manifest, service worker, installable
 - [x] Deploy (Netlify)
 
