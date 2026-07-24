@@ -1,4 +1,4 @@
-const CACHE_NAME = "expense-tracker-v1";
+const CACHE_NAME = "expense-tracker-v2";
 const FILES_TO_CACHE = [
   "/",
   "/index.html",
@@ -14,6 +14,20 @@ self.addEventListener("install", function(event) {
       return cache.addAll(FILES_TO_CACHE);
     })
   );
+  self.skipWaiting();
+});
+
+self.addEventListener("activate", function(event) {
+  event.waitUntil(
+    caches.keys().then(function(keyList) {
+      return Promise.all(keyList.map(function(key) {
+        if (key !== CACHE_NAME) {
+          return caches.delete(key);
+        }
+      }));
+    })
+  );
+  self.clients.claim();
 });
 
 self.addEventListener("fetch", function(event) {
