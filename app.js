@@ -112,6 +112,37 @@ function muatData() {
   }
 }
 
+function exportData() {
+  const dataStr = JSON.stringify(pengeluaran, null, 2);
+  const blob = new Blob([dataStr], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "expense-tracker-backup.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      pengeluaran = data;
+      simpanData();
+      render();
+      hitungTotal();
+      alert("Data berhasil di-import!");
+    } catch {
+      alert("File tidak valid!");
+    }
+  };
+  reader.readAsText(file);
+}
+
 document.getElementById("btn-tambah").addEventListener("click", tambahPengeluaran);
 muatData();
 render();
