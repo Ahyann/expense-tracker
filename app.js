@@ -143,6 +143,49 @@ function importData(event) {
   reader.readAsText(file);
 }
 
+function renderReports() {
+  const container = document.getElementById("ringkasan-kategori");
+  
+  if (pengeluaran.length === 0) {
+    container.innerHTML = '<p class="text-gray-400 text-center">Belum ada transaksi</p>';
+    return;
+  }
+
+  // Kelompokkan per kategori
+  const perKategori = {};
+  pengeluaran.forEach(function(item) {
+    if (!perKategori[item.kategori]) {
+      perKategori[item.kategori] = 0;
+    }
+    perKategori[item.kategori] += item.jumlah;
+  });
+
+  let html = "";
+  for (const kategori in perKategori) {
+    html += `
+      <div class="flex justify-between items-center bg-gray-700 rounded-xl px-4 py-3">
+        <span class="font-medium">${kategori}</span>
+        <span class="text-red-400 font-bold">Rp${perKategori[kategori].toLocaleString('id-ID')}</span>
+      </div>
+    `;
+  }
+  container.innerHTML = html;
+}
+
+function gantiTab(tab) {
+  ['home', 'reports', 'settings'].forEach(function(t) {
+    document.getElementById('konten-' + t).style.display = 'none';
+    document.getElementById('tab-' + t).classList.remove('text-yellow-400');
+    document.getElementById('tab-' + t).classList.add('text-gray-500');
+  });
+
+  document.getElementById('konten-' + tab).style.display = 'block';
+  document.getElementById('tab-' + tab).classList.remove('text-gray-500');
+  document.getElementById('tab-' + tab).classList.add('text-yellow-400');
+
+  if (tab === 'reports') renderReports();
+}
+
 document.getElementById("btn-tambah").addEventListener("click", tambahPengeluaran);
 muatData();
 render();
