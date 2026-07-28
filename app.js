@@ -63,12 +63,10 @@ function hitungTotal() {
 
 function tambahPengeluaran() {
   const jumlah = Number(document.getElementById("input-jumlah").value);
-  const kategori = document.getElementById("input-kategori").value;
   const tanggal = document.getElementById("input-tanggal").value;
   const catatan = document.getElementById("input-catatan").value;
 
-  // Validasi: semua field harus diisi, jumlah harus lebih dari 0
-  if (!jumlah || !kategori || !tanggal || !catatan) {
+  if (!jumlah || !kategoriDipilih || !tanggal || !catatan) {
     alert("Semua field harus diisi!");
     return;
   }
@@ -81,7 +79,7 @@ function tambahPengeluaran() {
   const baru = {
     id: Date.now(),
     jumlah: jumlah,
-    kategori: kategori,
+    kategori: kategoriDipilih,
     tanggal: tanggal,
     catatan: catatan
   };
@@ -90,6 +88,7 @@ function tambahPengeluaran() {
   simpanData();
   render();
   hitungTotal();
+  tutupModal();
 }
 
 function hapusPengeluaran(id) {
@@ -186,7 +185,48 @@ function gantiTab(tab) {
   if (tab === 'reports') renderReports();
 }
 
-document.getElementById("btn-tambah").addEventListener("click", tambahPengeluaran);
+let kategoriDipilih = "";
+
+function bukaModal() {
+  const modal = document.getElementById("modal");
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+  // Reset form
+  document.getElementById("input-jumlah").value = "";
+  document.getElementById("input-catatan").value = "";
+  kategoriDipilih = "";
+  // Reset highlight kategori
+  document.querySelectorAll(".kategori-btn").forEach(function(btn) {
+    btn.classList.remove("bg-yellow-400");
+    btn.classList.add("bg-gray-800");
+    btn.querySelector("span:last-child").classList.remove("text-gray-900");
+    btn.querySelector("span:last-child").classList.add("text-gray-400");
+  });
+}
+
+function tutupModal() {
+  const modal = document.getElementById("modal");
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+}
+
+function pilihKategori(kategori) {
+  kategoriDipilih = kategori;
+  // Reset semua
+  document.querySelectorAll(".kategori-btn").forEach(function(btn) {
+    btn.classList.remove("bg-yellow-400");
+    btn.classList.add("bg-gray-800");
+    btn.querySelector("span:last-child").classList.remove("text-gray-900");
+    btn.querySelector("span:last-child").classList.add("text-gray-400");
+  });
+  // Highlight yang dipilih
+  const dipilih = document.querySelector(`[data-kategori="${kategori}"]`);
+  dipilih.classList.add("bg-yellow-400");
+  dipilih.classList.remove("bg-gray-800");
+  dipilih.querySelector("span:last-child").classList.add("text-gray-900");
+  dipilih.querySelector("span:last-child").classList.remove("text-gray-400");
+}
+
 muatData();
 render();
 hitungTotal();

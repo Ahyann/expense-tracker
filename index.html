@@ -23,28 +23,9 @@
 
     <!-- TAB HOME -->
     <div id="konten-home">
-      <!-- Card Total -->
       <div class="bg-gray-800 rounded-2xl p-5 mb-6">
         <h2 id="total" class="text-3xl font-bold text-center"></h2>
       </div>
-
-      <!-- Form Tambah -->
-      <div class="bg-gray-800 rounded-2xl p-5 mb-6 flex flex-col gap-3">
-        <input type="number" id="input-jumlah" placeholder="Jumlah (Rp)"
-          class="bg-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-400 outline-none">
-        <input type="text" id="input-kategori" placeholder="Kategori"
-          class="bg-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-400 outline-none">
-        <input type="date" id="input-tanggal"
-          class="bg-gray-700 rounded-xl px-4 py-3 text-white outline-none">
-        <input type="text" id="input-catatan" placeholder="Catatan"
-          class="bg-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-400 outline-none">
-        <button id="btn-tambah"
-          class="bg-yellow-400 text-gray-900 font-bold rounded-xl py-3 hover:bg-yellow-300 transition">
-          + Tambah
-        </button>
-      </div>
-
-      <!-- Daftar Transaksi -->
       <div id="daftar-pengeluaran" class="flex flex-col gap-3"></div>
     </div>
 
@@ -73,9 +54,63 @@
 
   </div>
 
+  <!-- Modal Tambah Transaksi -->
+  <div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center" style="background: rgba(0,0,0,0.3); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);">
+    <div class="bg-gray-900 w-full max-w-md rounded-3xl p-6">
+      <div class="flex justify-between items-center mb-6">
+        <button onclick="tutupModal()" class="text-gray-400 text-2xl">✕</button>
+        <span class="font-bold text-lg">Tambah Pengeluaran</span>
+        <div class="w-6"></div>
+      </div>
+      <div class="bg-gray-800 rounded-2xl px-4 py-3 mb-4 flex items-center gap-3">
+        <span class="text-gray-400 font-bold">Rp</span>
+        <input type="number" id="input-jumlah" placeholder="0"
+          class="bg-transparent text-white text-2xl font-bold outline-none w-full">
+      </div>
+      <p class="text-gray-400 text-sm mb-3">Pilih Kategori</p>
+      <div class="grid grid-cols-4 gap-3 mb-4" id="grid-kategori">
+        <button onclick="pilihKategori('Food')" data-kategori="Food"
+          class="kategori-btn flex flex-col items-center gap-1 bg-gray-800 rounded-2xl py-3">
+          <span class="text-2xl">🍔</span>
+          <span class="text-xs text-gray-400">Food</span>
+        </button>
+        <button onclick="pilihKategori('Beverages')" data-kategori="Beverages"
+          class="kategori-btn flex flex-col items-center gap-1 bg-gray-800 rounded-2xl py-3">
+          <span class="text-2xl">🧋</span>
+          <span class="text-xs text-gray-400">Beverages</span>
+        </button>
+        <button onclick="pilihKategori('Transport')" data-kategori="Transport"
+          class="kategori-btn flex flex-col items-center gap-1 bg-gray-800 rounded-2xl py-3">
+          <span class="text-2xl">🚗</span>
+          <span class="text-xs text-gray-400">Transport</span>
+        </button>
+        <button onclick="pilihKategori('Fun/Travel')" data-kategori="Fun/Travel"
+          class="kategori-btn flex flex-col items-center gap-1 bg-gray-800 rounded-2xl py-3">
+          <span class="text-2xl">✈️</span>
+          <span class="text-xs text-gray-400">Fun/Travel</span>
+        </button>
+        <button onclick="pilihKategori('Skincare')" data-kategori="Skincare"
+          class="kategori-btn flex flex-col items-center gap-1 bg-gray-800 rounded-2xl py-3">
+          <span class="text-2xl">🧴</span>
+          <span class="text-xs text-gray-400">Skincare</span>
+        </button>
+      </div>
+      <div class="flex flex-col gap-3 mb-6">
+        <input type="date" id="input-tanggal"
+          class="bg-gray-800 rounded-xl px-4 py-3 text-white outline-none">
+        <input type="text" id="input-catatan" placeholder="Tambah catatan..."
+          class="bg-gray-800 rounded-xl px-4 py-3 text-white placeholder-gray-400 outline-none">
+      </div>
+      <button onclick="tambahPengeluaran()"
+        class="w-full bg-yellow-400 text-gray-900 font-bold rounded-2xl py-4 text-lg">
+        Simpan
+      </button>
+    </div>
+  </div>
+
   <!-- Bottom Navigation -->
   <nav class="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-700">
-    <div class="max-w-md mx-auto flex">
+    <div class="max-w-md mx-auto flex items-center">
       <button onclick="gantiTab('home')" id="tab-home"
         class="flex-1 flex flex-col items-center py-3 text-yellow-400">
         <span class="text-xl">🏠</span>
@@ -86,10 +121,18 @@
         <span class="text-xl">📊</span>
         <span class="text-xs mt-1">Reports</span>
       </button>
+      <button onclick="bukaModal()"
+        class="flex-1 flex flex-col items-center -mt-6">
+        <span class="bg-yellow-400 text-gray-900 text-3xl font-bold w-14 h-14 rounded-full flex items-center justify-center shadow-lg">+</span>
+      </button>
       <button onclick="gantiTab('settings')" id="tab-settings"
         class="flex-1 flex flex-col items-center py-3 text-gray-500">
         <span class="text-xl">⚙️</span>
         <span class="text-xs mt-1">Settings</span>
+      </button>
+      <button class="flex-1 flex flex-col items-center py-3 text-gray-500">
+        <span class="text-xl">👤</span>
+        <span class="text-xs mt-1">Mine</span>
       </button>
     </div>
   </nav>
