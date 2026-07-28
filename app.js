@@ -201,6 +201,7 @@ function bukaModal() {
     btn.classList.add("bg-gray-800");
     btn.querySelector("span:last-child").classList.remove("text-gray-900");
     btn.querySelector("span:last-child").classList.add("text-gray-400");
+    document.body.style.overflow = "hidden";
   });
 }
 
@@ -208,6 +209,7 @@ function tutupModal() {
   const modal = document.getElementById("modal");
   modal.classList.add("hidden");
   modal.classList.remove("flex");
+  document.body.style.overflow = "";
 }
 
 function pilihKategori(kategori) {
