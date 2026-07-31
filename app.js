@@ -15,6 +15,13 @@ let pengeluaran = [
   }
 ];
 
+function tampilkanTanggal() {
+  const sekarang = new Date();
+  const opsi = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  const tanggal = sekarang.toLocaleDateString('id-ID', opsi);
+  document.getElementById("tanggal-hari-ini").innerHTML = tanggal;
+}
+
 function render() {
   const wadah = document.getElementById("daftar-pengeluaran");
   let html = "";
@@ -230,6 +237,7 @@ function pilihKategori(kategori) {
 }
 
 muatData();
+tampilkanTanggal();
 render();
 hitungTotal();
 
