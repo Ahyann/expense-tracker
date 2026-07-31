@@ -207,6 +207,7 @@ function renderReports() {
   // Ringkasan per kategori
   let html = "";
   const total = data.reduce(function(a, b) { return a + b; }, 0);
+  document.getElementById("total-reports").innerHTML = "Rp" + total.toLocaleString('id-ID');
   labels.forEach(function(kategori, i) {
     const persen = ((data[i] / total) * 100).toFixed(1);
     html += `
