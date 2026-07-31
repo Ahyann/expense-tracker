@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ahyan's Expense</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="manifest" href="manifest.json">
   <script>
     if ('serviceWorker' in navigator) {
@@ -33,7 +34,13 @@
     <!-- TAB REPORTS -->
     <div id="konten-reports" style="display:none">
       <div class="bg-gray-800 rounded-2xl p-5 mb-4">
-        <h2 class="text-lg font-bold mb-4">Ringkasan per Kategori</h2>
+        <h2 class="text-lg font-bold mb-4">Pengeluaran per Kategori</h2>
+        <div class="relative" style="height: 250px;">
+          <canvas id="chart-kategori"></canvas>
+        </div>
+      </div>
+      <div class="bg-gray-800 rounded-2xl p-5">
+        <h2 class="text-lg font-bold mb-4">Ringkasan</h2>
         <div id="ringkasan-kategori" class="flex flex-col gap-3"></div>
       </div>
     </div>

@@ -1,19 +1,4 @@
-let pengeluaran = [
-  {
-    id: 1,
-    jumlah: 25000,
-    kategori: "Makanan",
-    tanggal: "2026-06-20",
-    catatan: "Makan siang"
-  },
-  {
-    id: 2,
-    jumlah: 50000,
-    kategori: "Transportasi",
-    tanggal: "2026-06-21",
-    catatan: "Bensin"
-  }
-];
+let pengeluaran = [];
 
 function tampilkanTanggal() {
   const sekarang = new Date();
@@ -149,11 +134,17 @@ function importData(event) {
   reader.readAsText(file);
 }
 
+let chartInstance = null;
+
 function renderReports() {
   const container = document.getElementById("ringkasan-kategori");
-  
+
   if (pengeluaran.length === 0) {
     container.innerHTML = '<p class="text-gray-400 text-center">Belum ada transaksi</p>';
+    if (chartInstance) {
+      chartInstance.destroy();
+      chartInstance = null;
+    }
     return;
   }
 
@@ -166,15 +157,71 @@ function renderReports() {
     perKategori[item.kategori] += item.jumlah;
   });
 
+  const labels = Object.keys(perKategori);
+  const data = Object.values(perKategori);
+  const warna = {
+    'Food': '#f59e0b',
+    'Beverages': '#3b82f6',
+    'Transport': '#10b981',
+    'Fun/Travel': '#8b5cf6',
+    'Skincare': '#ec4899'
+  };
+  const colors = labels.map(function(l) {
+    return warna[l] || '#6b7280';
+  });
+
+  // Destroy chart lama kalau ada
+  if (chartInstance) {
+    chartInstance.destroy();
+  }
+
+  const ctx = document.getElementById('chart-kategori').getContext('2d');
+  chartInstance = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: data,
+        backgroundColor: colors,
+        borderWidth: 0,
+        hoverOffset: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '65%',
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            color: '#9ca3af',
+            padding: 16,
+            font: { size: 12 }
+          }
+        }
+      }
+    }
+  });
+
+  // Ringkasan per kategori
   let html = "";
-  for (const kategori in perKategori) {
+  const total = data.reduce(function(a, b) { return a + b; }, 0);
+  labels.forEach(function(kategori, i) {
+    const persen = ((data[i] / total) * 100).toFixed(1);
     html += `
-      <div class="flex justify-between items-center bg-gray-700 rounded-xl px-4 py-3">
-        <span class="font-medium">${kategori}</span>
-        <span class="text-red-400 font-bold">Rp${perKategori[kategori].toLocaleString('id-ID')}</span>
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-3">
+          <div class="w-3 h-3 rounded-full" style="background-color: ${colors[i]}"></div>
+          <span class="text-white">${kategori}</span>
+        </div>
+        <div class="text-right">
+          <p class="text-white font-bold">Rp${data[i].toLocaleString('id-ID')}</p>
+          <p class="text-gray-400 text-xs">${persen}%</p>
+        </div>
       </div>
     `;
-  }
+  });
   container.innerHTML = html;
 }
 
@@ -208,8 +255,8 @@ function bukaModal() {
     btn.classList.add("bg-gray-800");
     btn.querySelector("span:last-child").classList.remove("text-gray-900");
     btn.querySelector("span:last-child").classList.add("text-gray-400");
-    document.body.style.overflow = "hidden";
   });
+  document.body.style.overflow = "hidden";
 }
 
 function tutupModal() {
