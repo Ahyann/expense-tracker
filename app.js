@@ -11,7 +11,13 @@ function render() {
   const wadah = document.getElementById("daftar-pengeluaran");
   let html = "";
 
-  if (pengeluaran.length === 0) {
+  // Filter bulan dulu
+  const filterBulan = `${tahunAktif}-${String(bulanAktif).padStart(2, '0')}`;
+  const terfilter = pengeluaran.filter(function(item) {
+    return item.tanggal.substring(0, 7) === filterBulan;
+  });
+
+  if (terfilter.length === 0) {
     html = `
       <div class="bg-gray-800 rounded-2xl p-6 text-center text-gray-400">
         <p class="text-4xl mb-2">-</p>
@@ -22,32 +28,69 @@ function render() {
     return;
   }
 
-  pengeluaran.forEach(function(item) {
-  html += `
-    <div class="bg-gray-800 rounded-2xl p-4 flex justify-between items-center">
-      <div>
-        <p class="font-semibold text-white">${item.kategori}</p>
-        <p class="text-sm text-gray-400">${item.tanggal} • ${item.catatan}</p>
+  // Urutkan terbaru di atas
+  const terurut = [...terfilter].sort(function(a, b) {
+    return new Date(b.tanggal) - new Date(a.tanggal);
+  });
+
+  // Kelompokkan per tanggal
+  const perTanggal = {};
+  terurut.forEach(function(item) {
+    if (!perTanggal[item.tanggal]) {
+      perTanggal[item.tanggal] = [];
+    }
+    perTanggal[item.tanggal].push(item);
+  });
+
+  // Render per grup tanggal
+  for (const tanggal in perTanggal) {
+    const items = perTanggal[tanggal];
+    const totalHari = items.reduce(function(acc, item) {
+      return acc + item.jumlah;
+    }, 0);
+
+    const tgl = new Date(tanggal + 'T00:00:00');
+    const labelTanggal = tgl.toLocaleDateString('id-ID', {
+      weekday: 'short', day: 'numeric', month: 'short'
+    });
+
+    html += `
+      <div class="flex justify-between items-center px-1 mb-2 mt-4">
+        <span class="text-gray-400 text-sm font-medium">${labelTanggal}</span>
+        <span class="text-red-400 text-sm font-medium">-Rp${totalHari.toLocaleString('id-ID')}</span>
       </div>
-      <div class="flex flex-col items-end gap-2">
-        <p class="text-red-400 font-bold">-Rp${item.jumlah.toLocaleString('id-ID')}</p>
-        <button onclick="hapusPengeluaran(${item.id})"
-          class="text-xs text-gray-500 hover:text-red-400 transition">
-          Hapus
-        </button>
-      </div>
-    </div>
-  `;
-});
+    `;
+
+    items.forEach(function(item) {
+      html += `
+        <div class="bg-gray-800 rounded-2xl p-4 flex justify-between items-center mb-2">
+          <div>
+            <p class="font-semibold text-white">${item.kategori}</p>
+            <p class="text-sm text-gray-400">${item.catatan}</p>
+          </div>
+          <div class="flex flex-col items-end gap-2">
+            <p class="text-red-400 font-bold">-Rp${item.jumlah.toLocaleString('id-ID')}</p>
+            <button onclick="hapusPengeluaran(${item.id})"
+              class="text-xs text-gray-500 hover:text-red-400 transition">
+              Hapus
+            </button>
+          </div>
+        </div>
+      `;
+    });
+  }
 
   wadah.innerHTML = html;
 }
 
 function hitungTotal() {
+  const filterBulan = `${tahunAktif}-${String(bulanAktif).padStart(2, '0')}`;
   let total = 0;
 
   pengeluaran.forEach(function(item) {
-    total += item.jumlah;
+    if (item.tanggal.substring(0, 7) === filterBulan) {
+      total += item.jumlah;
+    }
   });
 
   document.getElementById("total").innerHTML = "Total: Rp" + total.toLocaleString('id-ID');
@@ -138,9 +181,20 @@ let chartInstance = null;
 
 function renderReports() {
   const container = document.getElementById("ringkasan-kategori");
+  const filterBulan = `${tahunAktif}-${String(bulanAktif).padStart(2, '0')}`;
 
-  if (pengeluaran.length === 0) {
-    container.innerHTML = '<p class="text-gray-400 text-center">Belum ada transaksi</p>';
+  // Filter data sesuai bulan aktif
+  const terfilter = pengeluaran.filter(function(item) {
+    return item.tanggal.substring(0, 7) === filterBulan;
+  });
+
+  // Update label bulan di Reports
+  const labelBulan = `${namaBulan[bulanAktif - 1]} ${tahunAktif}`;
+  document.getElementById("label-bulan-reports").innerHTML = labelBulan;
+
+  if (terfilter.length === 0) {
+    container.innerHTML = '<p class="text-gray-400 text-center">Belum ada transaksi bulan ini</p>';
+    document.getElementById("total-reports").innerHTML = "Rp0";
     if (chartInstance) {
       chartInstance.destroy();
       chartInstance = null;
@@ -150,7 +204,7 @@ function renderReports() {
 
   // Kelompokkan per kategori
   const perKategori = {};
-  pengeluaran.forEach(function(item) {
+  terfilter.forEach(function(item) {
     if (!perKategori[item.kategori]) {
       perKategori[item.kategori] = 0;
     }
@@ -170,7 +224,6 @@ function renderReports() {
     return warna[l] || '#6b7280';
   });
 
-  // Destroy chart lama kalau ada
   if (chartInstance) {
     chartInstance.destroy();
   }
@@ -204,7 +257,6 @@ function renderReports() {
     }
   });
 
-  // Ringkasan per kategori
   let html = "";
   const total = data.reduce(function(a, b) { return a + b; }, 0);
   document.getElementById("total-reports").innerHTML = "Rp" + total.toLocaleString('id-ID');
@@ -282,6 +334,70 @@ function pilihKategori(kategori) {
   dipilih.classList.remove("bg-gray-800");
   dipilih.querySelector("span:last-child").classList.add("text-gray-900");
   dipilih.querySelector("span:last-child").classList.remove("text-gray-400");
+}
+
+const namaBulan = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+let tahunDipilih = new Date().getFullYear();
+let bulanDipilih = new Date().getMonth() + 1;
+let bulanAktif = new Date().getMonth() + 1;
+let tahunAktif = new Date().getFullYear();
+
+function bukaFilterBulan() {
+  tahunDipilih = tahunAktif;
+  bulanDipilih = bulanAktif;
+  renderGridBulan();
+  document.getElementById("popup-bulan").classList.remove("hidden");
+  document.getElementById("popup-bulan").classList.add("flex");
+  document.body.style.overflow = "hidden";
+}
+
+function tutupFilterBulan() {
+  document.getElementById("popup-bulan").classList.add("hidden");
+  document.getElementById("popup-bulan").classList.remove("flex");
+  document.body.style.overflow = "";
+}
+
+function gantiTahun(arah) {
+  tahunDipilih += arah;
+  renderGridBulan();
+}
+
+function resetBulan() {
+  tahunDipilih = new Date().getFullYear();
+  bulanDipilih = new Date().getMonth() + 1;
+  renderGridBulan();
+}
+
+function renderGridBulan() {
+  document.getElementById("label-tahun").innerHTML = tahunDipilih;
+  let html = "";
+  for (let i = 1; i <= 12; i++) {
+    const aktif = i === bulanDipilih && tahunDipilih === tahunAktif;
+    const dipilihSekarang = i === bulanDipilih && tahunDipilih === tahunDipilih;
+    html += `
+      <button onclick="pilihBulanGrid(${i})"
+        class="rounded-2xl py-3 text-sm font-bold transition ${i === bulanDipilih ? 'bg-yellow-400 text-gray-900' : 'bg-gray-800 text-white'}">
+        ${namaBulan[i-1]}
+      </button>
+    `;
+  }
+  document.getElementById("grid-bulan").innerHTML = html;
+}
+
+function pilihBulanGrid(bulan) {
+  bulanDipilih = bulan;
+  renderGridBulan();
+}
+
+function konfirmasiBulan() {
+  bulanAktif = bulanDipilih;
+  tahunAktif = tahunDipilih;
+  const labelBulan = namaBulan[bulanAktif - 1];
+  document.getElementById("label-filter-bulan").innerHTML = labelBulan;
+  tutupFilterBulan();
+  render();
+  hitungTotal();
+  renderReports();
 }
 
 muatData();
