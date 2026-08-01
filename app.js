@@ -289,6 +289,10 @@ function gantiTab(tab) {
   document.getElementById('tab-' + tab).classList.remove('text-gray-500');
   document.getElementById('tab-' + tab).classList.add('text-yellow-400');
 
+  // Sembunyiin/tampilkan tombol filter bulan
+  const btnFilter = document.getElementById('btn-filter-bulan');
+  btnFilter.style.visibility = tab === 'settings' ? 'hidden' : 'visible';
+
   if (tab === 'reports') renderReports();
 }
 
