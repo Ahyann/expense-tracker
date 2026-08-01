@@ -15,9 +15,24 @@
   <style>
   html {
     overflow-y: scroll;
+    }
+    @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .modal-content {
+    animation: slideUp 0.3s ease-out;
   }
 </style>
 </head>
+
 <body class="bg-gray-950 text-white min-h-screen">
 
   <div class="max-w-md mx-auto px-4 pb-20">
@@ -107,7 +122,7 @@
 
   <!-- Modal Tambah Transaksi -->
   <div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center" style="background: rgba(0,0,0,0.3); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);">
-    <div class="bg-gray-900 w-11/12 max-w-md rounded-3xl p-6">
+    <div class="bg-gray-900 w-11/12 max-w-md rounded-3xl p-6 modal-content">
       <div class="flex justify-between items-center mb-6">
         <button onclick="tutupModal()" class="text-gray-400 text-2xl">✕</button>
         <span class="font-bold text-lg">Tambah Pengeluaran</span>
