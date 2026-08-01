@@ -61,12 +61,26 @@ function render() {
       </div>
     `;
 
+    const emojiKategori = {
+    'Food': '🍔',
+    'Beverages': '🧋',
+    'Transport': '🚗',
+    'Fun/Travel': '✈️',
+    'Skincare': '🧴'
+};
+
     items.forEach(function(item) {
+      const emoji = emojiKategori[item.kategori] || '💰';
       html += `
         <div class="bg-gray-800 rounded-2xl p-4 flex justify-between items-center mb-2">
-          <div>
-            <p class="font-semibold text-white">${item.kategori}</p>
-            <p class="text-sm text-gray-400">${item.catatan}</p>
+          <div class="flex items-center gap-3">
+            <div class="bg-gray-700 rounded-2xl w-10 h-10 flex items-center justify-center text-xl">
+              ${emoji}
+            </div>
+            <div>
+              <p class="font-semibold text-white">${item.kategori}</p>
+              <p class="text-sm text-gray-400">${item.catatan}</p>
+            </div>
           </div>
           <div class="flex flex-col items-end gap-2">
             <p class="text-red-400 font-bold">-Rp${item.jumlah.toLocaleString('id-ID')}</p>
