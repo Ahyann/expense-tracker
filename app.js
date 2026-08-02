@@ -422,5 +422,6 @@ muatData();
 tampilkanTanggal();
 render();
 hitungTotal();
+document.getElementById("label-filter-bulan").innerHTML = namaBulan[bulanAktif - 1]; // ← tambah ini
 
 console.log(pengeluaran);
